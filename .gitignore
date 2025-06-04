@@ -1,0 +1,6 @@
+# Byte‐compiled / cache files
+__pycache__/
+*.py[cod]
+
+# VS Code workspace settings
+.vscode/
