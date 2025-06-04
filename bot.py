@@ -63,7 +63,7 @@ async def check_youtube_live_loop(context: ContextTypes.DEFAULT_TYPE):
         "key": YOUTUBE_API_KEY
     }
 
-    logger.info("➤ Checking YouTube live status…")
+    #logger.info("➤ Checking YouTube live status…")
     try:
         # Use requests in a thread so as not to block PTB's loop:
         from asyncio import get_running_loop
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     )
 
     # 4) Start polling (this also starts the JobQueue scheduler)
-    logger.info("Bot started. Polling for updates…")
+    #logger.info("Bot started. Polling for updates…")
     application.run_polling()
 
     # Start Uvicorn so FastAPI listens on $PORT:
