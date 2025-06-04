@@ -10,25 +10,15 @@ from telegram.ext import (
     ContextTypes,
 )
 
-# ─── Healthcheck Web Server (FastAPI) ───────────────────────────────────────────
-from fastapi import FastAPI
-import uvicorn
-import os
 
-app = FastAPI()
-
-@app.get("/")
-async def healthcheck():
-    # Render’s free tier will ping this endpoint to keep the service “awake”
-    return {"status": "OK"}
 
 
 # ─── Logging Setup ──────────────────────────────────────────────────────────────
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
+#logging.basicConfig(
+#    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#    level=logging.INFO,
+#)
+#logger = logging.getLogger(__name__)
 
 # ─── Environment Variables ───────────────────────────────────────────────────────
 TELEGRAM_TOKEN   = os.environ["TELEGRAM_BOT_TOKEN"]
@@ -43,18 +33,18 @@ last_live_video_id: str | None = None
 # ─── NOTIFY FUNCTION (async) ────────────────────────────────────────────────────
 async def notify_subscribers(live_url: str):
     if not subscribers:
-        logger.info("No subscribers to notify.")
+        #logger.info("No subscribers to notify.")
         return
 
     for chat_id in subscribers:
         try:
             await application.bot.send_message(
                 chat_id=chat_id,
-                text=f"📺 The channel is now LIVE!\n\n🔗 {live_url}"
+                text=f"📺 بدأ البث المباشر !\n\n🔗 {live_url}"
             )
-            logger.info(f"Notification sent to {chat_id}")
+            #logger.info(f"Notification sent to {chat_id}")
         except Exception as e:
-            logger.error(f"Failed to send notification to {chat_id}: {e}")
+            #logger.error(f"Failed to send notification to {chat_id}: {e}")
 
 
 # ─── YOUTUBE‐LIVE‐CHECK LOOP (async) ──────────────────────────────────────────────
@@ -87,11 +77,11 @@ async def check_youtube_live_loop(context: ContextTypes.DEFAULT_TYPE):
         data = resp.json()
 
         if resp.status_code != 200:
-            logger.warning(f"  » Non-200 from YouTube: {data}")
+            #logger.warning(f"  » Non-200 from YouTube: {data}")
             return
 
         items = data.get("items", [])
-        logger.info(f"  » items returned: {len(items)}")
+        #logger.info(f"  » items returned: {len(items)}")
         if not items:
             last_live_video_id = None
             return
@@ -106,33 +96,33 @@ async def check_youtube_live_loop(context: ContextTypes.DEFAULT_TYPE):
         #else:
             #logger.info("  » Still the same live; no new notification.")
     except requests.exceptions.ConnectTimeout:
-        logger.error("  » YouTube request timed out (ConnectTimeout)")
+        pass #logger.error("  » YouTube request timed out (ConnectTimeout)")
     except requests.exceptions.ReadTimeout:
-        logger.error("  » YouTube request timed out reading data (ReadTimeout)")
+        pass #logger.error("  » YouTube request timed out reading data (ReadTimeout)")
     except Exception as e:
-        logger.exception(f"  » Unexpected error: {e}")
+        pass #logger.exception(f"  » Unexpected error: {e}")
 
 # ─── COMMAND HANDLERS ────────────────────────────────────────────────────────────
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "👋 Welcome! Send /subscribe to get notified when the channel goes live."
+        "👋 مرحبًا! اضغط الأمر /subscribe لتصلك إشعارات عندما يبدأ البث المباشر على القناة."
     )
 
 
 async def subscribe_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     if chat_id in subscribers:
-        await update.message.reply_text("You’re already subscribed! ✅")
-        logger.info(f"subscribe_command: {chat_id} already in the set.")
+        await update.message.reply_text("✅ أنت مشترك بالفعل")
+        #logger.info(f"subscribe_command: {chat_id} already in the set.")
     else:
         subscribers.add(chat_id)
         await update.message.reply_text(
-            "✅ Subscribed! I’ll notify you when the channel goes live."
+            "✅ تم الاشتراك! سأقوم بإعلامك عندما تبدأ القناة البث المباشر."
         )
-        logger.info(
-            f"subscribe_command: NEW subscriber → {chat_id} "
-            f"(total subscribers = {len(subscribers)})"
-        )
+        #logger.info(
+        #    f"subscribe_command: NEW subscriber → {chat_id} "
+        #    f"(total subscribers = {len(subscribers)})"
+        #)
 
 
 if __name__ == "__main__":
@@ -155,5 +145,5 @@ if __name__ == "__main__":
     application.run_polling()
 
     # Start Uvicorn so FastAPI listens on $PORT:
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    #port = int(os.environ.get("PORT", 8000))
+    #uvicorn.run(app, host="0.0.0.0", port=port)
