@@ -10,6 +10,19 @@ from telegram.ext import (
     ContextTypes,
 )
 
+# ─── Healthcheck Web Server (FastAPI) ───────────────────────────────────────────
+from fastapi import FastAPI
+import uvicorn
+import os
+
+app = FastAPI()
+
+@app.get("/")
+async def healthcheck():
+    # Render’s free tier will ping this endpoint to keep the service “awake”
+    return {"status": "OK"}
+
+
 # ─── Logging Setup ──────────────────────────────────────────────────────────────
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -140,3 +153,7 @@ if __name__ == "__main__":
     # 4) Start polling (this also starts the JobQueue scheduler)
     logger.info("Bot started. Polling for updates…")
     application.run_polling()
+
+    # Start Uvicorn so FastAPI listens on $PORT:
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
