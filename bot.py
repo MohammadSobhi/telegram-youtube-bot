@@ -73,7 +73,7 @@ async def check_youtube_live_loop(context: ContextTypes.DEFAULT_TYPE):
             lambda: requests.get(url, params=params, timeout=(15, 15))
         )
 
-        logger.info(f"  → YouTube API HTTP {resp.status_code}")
+        #logger.info(f"  → YouTube API HTTP {resp.status_code}")
         data = resp.json()
 
         if resp.status_code != 200:
