@@ -43,8 +43,7 @@ async def notify_subscribers(live_url: str):
                 text=f"📺 بدأ البث المباشر !\n\n🔗 {live_url}"
             )
             #logger.info(f"Notification sent to {chat_id}")
-        except Exception as e:
-            #logger.error(f"Failed to send notification to {chat_id}: {e}")
+        except Exception :
             pass
 
 
@@ -100,7 +99,7 @@ async def check_youtube_live_loop(context: ContextTypes.DEFAULT_TYPE):
         pass
     except requests.exceptions.ReadTimeout:
         pass
-    except Exception as e:
+    except Exception:
         pass
 
 # ─── COMMAND HANDLERS ────────────────────────────────────────────────────────────
