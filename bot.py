@@ -89,10 +89,10 @@ async def check_youtube_live_loop(context: ContextTypes.DEFAULT_TYPE):
         video_id = items[0]["id"]["videoId"]
         live_url = f"https://youtu.be/{video_id}"
 
-        #if video_id != last_live_video_id:
-            #last_live_video_id = video_id
+        if video_id != last_live_video_id:
+            last_live_video_id = video_id
             #logger.info(f"  → Channel is LIVE! Notifying: {live_url}")
-        await notify_subscribers(live_url)
+            await notify_subscribers(live_url)
         #else:
             #logger.info("  » Still the same live; no new notification.")
     except requests.exceptions.ConnectTimeout:
