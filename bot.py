@@ -45,6 +45,7 @@ async def notify_subscribers(live_url: str):
             #logger.info(f"Notification sent to {chat_id}")
         except Exception as e:
             #logger.error(f"Failed to send notification to {chat_id}: {e}")
+            pass
 
 
 # ─── YOUTUBE‐LIVE‐CHECK LOOP (async) ──────────────────────────────────────────────
@@ -96,11 +97,11 @@ async def check_youtube_live_loop(context: ContextTypes.DEFAULT_TYPE):
         #else:
             #logger.info("  » Still the same live; no new notification.")
     except requests.exceptions.ConnectTimeout:
-        pass #logger.error("  » YouTube request timed out (ConnectTimeout)")
+        pass
     except requests.exceptions.ReadTimeout:
-        pass #logger.error("  » YouTube request timed out reading data (ReadTimeout)")
+        pass
     except Exception as e:
-        pass #logger.exception(f"  » Unexpected error: {e}")
+        pass
 
 # ─── COMMAND HANDLERS ────────────────────────────────────────────────────────────
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
